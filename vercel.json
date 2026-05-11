@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "framework": null,
+  "buildCommand": null,
+  "outputDirectory": ".",
+  "routes": [
+    { "src": "/socket.io/(.*)", "dest": "https://TU-APP.onrender.com/socket.io/$1" },
+    { "src": "/(.*)", "dest": "/$1" }
+  ]
+}

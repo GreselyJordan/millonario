@@ -3,141 +3,235 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>¿Quién Quiere Ser Millonario? — Planificación Estratégica</title>
+<title>¿Quién Quiere Ser Millonario? — Multijugador</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="multiplayer.css">
 </head>
 <body>
 
-<button class="music-toggle" id="music-btn" onclick="toggleMusic()" title="Música de fondo">🎵</button>
-<div class="lifeline-toast" id="ll-toast">🎯 ¡Comodín activado!</div>
-
-<!-- MODAL AUDIENCE -->
-<div class="modal-overlay" id="modal-audience" style="display:none;" onclick="if(event.target===this)closeModal('modal-audience')">
-  <div class="modal-box">
-    <button class="modal-close" onclick="closeModal('modal-audience')">✕</button>
-    <div class="modal-title">👥 Ayuda del Público</div>
-    <div class="modal-subtitle">El público ha votado…</div>
-    <div class="audience-chart" id="aud-chart"></div>
-    <div style="font-size:12px;color:rgba(255,255,255,0.4);text-align:center;">El público eligió esta opción como la más probable.</div>
-  </div>
-</div>
-
-<!-- MODAL PHONE -->
-<div class="modal-overlay" id="modal-phone" style="display:none;" onclick="if(event.target===this)closeModal('modal-phone')">
-  <div class="modal-box">
-    <button class="modal-close" onclick="closeModal('modal-phone')">✕</button>
-    <div class="modal-title">📞 Llamar a un Amigo</div>
-    <div class="modal-subtitle">Conectando con tu experto…</div>
-    <div class="phone-wrap">
-      <span class="phone-icon">📱</span>
-      <div class="phone-name" id="phone-name">Dr. Experto Estratégico</div>
-      <div class="phone-status" id="phone-status">Llamando…</div>
-      <div class="phone-dots" id="phone-dots">
-        <div class="phone-dot"></div>
-        <div class="phone-dot"></div>
-        <div class="phone-dot"></div>
-      </div>
-      <div class="phone-bubble" id="phone-bubble" style="display:none;"></div>
-    </div>
-  </div>
-</div>
-
 <div id="app">
-  <div class="logo-wrap">
-    <div class="logo-title">¿Quién Quiere<br>Ser Millonario?</div>
-    <div class="logo-sub">Planificación Estratégica — Mentes de Acero</div>
-    <div class="logo-divider"></div>
-  </div>
 
-
-  <!-- PLAY TAB -->
-  <div id="play-tab" class="screen active">
-
-    <!-- MENU -->
-    <div id="menu-screen">
-      <div class="menu-icon">🎯</div>
-      <div class="menu-title">Listo para el desafío</div>
-      <div class="menu-desc">
-        Responde las preguntas de Planificación Estratégica.<br>
-        Tienes 3 comodines: <strong style="color:var(--gold)">50/50</strong>, <strong style="color:var(--gold)">Público</strong> y <strong style="color:var(--gold)">Llamada</strong> — ¡úsalos con sabiduría!
-      </div>
-      <div class="menu-stats">
-        <div class="menu-stat"><div class="menu-stat-n" id="menu-total">0</div><div class="menu-stat-l">Preguntas</div></div>
-        <div class="menu-stat"><div class="menu-stat-n">3</div><div class="menu-stat-l">Comodines</div></div>
-        <div class="menu-stat"><div class="menu-stat-n">A–D</div><div class="menu-stat-l">Opciones</div></div>
-      </div>
-      <button class="btn-gold" onclick="startGame()">▶ COMENZAR JUEGO</button>
-    </div>
-
-    <!-- GAME -->
-    <div id="game-screen" style="display:none;">
-      <div class="prog-wrap">
-        <div class="prog-label"><span id="prog-text">Pregunta 1</span><span id="prog-pct">0%</span></div>
-        <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
-      </div>
-      <div class="prize-ladder" id="prize-ladder"></div>
-      <div class="lifelines-row">
-        <button class="lifeline-btn" id="ll-5050" onclick="use5050()" title="Elimina dos respuestas incorrectas">
-          <span class="ll-icon">50:50</span>
-          <span class="ll-label">50/50</span>
-        </button>
-        <button class="lifeline-btn" id="ll-audience" onclick="useAudience()" title="Ayuda del público">
-          <span class="ll-icon">👥</span>
-          <span class="ll-label">Público</span>
-        </button>
-        <button class="lifeline-btn" id="ll-phone" onclick="usePhone()" title="Llamar a un amigo">
-          <span class="ll-icon">📞</span>
-          <span class="ll-label">Llamada</span>
-        </button>
-      </div>
-      <div class="q-card">
-        <div class="q-meta">
-          <div class="q-num-label" id="q-num-label">Pregunta 1 de 60</div>
-          <div class="diff-badge" id="diff-badge">Fácil</div>
+  <!-- ═══════════════════════════ HOME ═══════════════════════════════ -->
+  <div id="screen-home" class="mp-screen active">
+    <div class="mm-stars" aria-hidden="true"></div>
+    <div class="mm-logo-wrap">
+      <div class="mm-logo-ring">
+        <div class="mm-logo-inner">
+          <div class="mm-logo-title">¿QUIÉN<br>QUIERE SER</div>
+          <div class="mm-logo-main">MILLONARIO</div>
+          <div class="mm-logo-sub">MULTIJUGADOR</div>
         </div>
-        <div class="q-text" id="q-text">...</div>
       </div>
-      <div class="opts-grid" id="opts-grid"></div>
-      <div class="feedback" id="feedback">
-        <div class="fb-head">
-          <div class="fb-icon-circle" id="fb-icon">✓</div>
-          <div class="fb-verdict" id="fb-verdict">¡Correcto!</div>
+    </div>
+    <div class="mp-home-btns">
+      <button class="mm-btn-gold" onclick="goTo('screen-host-setup')">
+        🎯 &nbsp;Crear Sala
+      </button>
+      <button class="mm-btn-outline" onclick="goTo('screen-join')">
+        🔑 &nbsp;Unirse a Sala
+      </button>
+    </div>
+    <p class="mp-home-desc">Compite en tiempo real con hasta 20 personas</p>
+  </div>
+
+  <!-- ═══════════════════════ HOST SETUP ═════════════════════════════ -->
+  <div id="screen-host-setup" class="mp-screen">
+    <div class="mm-stars" aria-hidden="true"></div>
+    <div class="mm-card">
+      <div class="mm-card-title">⚙️ Configurar Sala</div>
+
+      <label class="mm-label">Tu nombre (anfitrión)</label>
+      <input id="host-name-input" class="mm-input" type="text" maxlength="20"
+             placeholder="Ej: Profesor García" autocomplete="off">
+
+      <label class="mm-label">Número de preguntas</label>
+      <select id="host-num-q" class="mm-select">
+        <option value="10">10 preguntas</option>
+        <option value="20">20 preguntas</option>
+        <option value="30">30 preguntas</option>
+        <option value="60">Todas (60)</option>
+      </select>
+
+      <label class="mm-label">⏱ Tiempo por pregunta: <span id="timer-val-label">20s</span></label>
+      <div class="mm-slider-wrap">
+        <span class="mm-slider-edge">5s</span>
+        <input id="host-timer" class="mm-slider" type="range" min="5" max="120" step="5" value="20"
+               oninput="document.getElementById('timer-val-label').textContent=this.value+'s'">
+        <span class="mm-slider-edge">120s</span>
+      </div>
+      <div class="mm-slider-ticks">
+        <span>10</span><span>20</span><span>30</span><span>45</span><span>60</span><span>90</span><span>120</span>
+      </div>
+
+      <button class="mm-btn-gold" onclick="createRoom()">🚀 &nbsp;Crear Sala</button>
+      <button class="mm-btn-back" onclick="goTo('screen-home')">← Volver</button>
+      <div id="host-setup-error" class="mm-error" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════ HOST LOBBY ═════════════════════════════ -->
+  <div id="screen-host-lobby" class="mp-screen">
+    <div class="mm-stars" aria-hidden="true"></div>
+    <div class="mm-lobby-header">
+      <div class="mm-lobby-subtitle">CÓDIGO DE SALA</div>
+      <div class="mm-code-display" id="host-room-code">——</div>
+      <div class="mm-lobby-hint">Comparte este código con los jugadores</div>
+      <div class="mm-lobby-config" id="host-config-info"></div>
+    </div>
+    <div class="mm-players-box">
+      <div class="mm-players-title">
+        Jugadores conectados
+        <span id="host-player-count" class="mm-count-badge">0</span>
+      </div>
+      <div id="host-player-list" class="mm-player-list"></div>
+    </div>
+    <div class="mm-lobby-footer">
+      <div id="host-start-hint" class="mm-start-hint">Conecta al menos 1 jugador para iniciar</div>
+      <button id="host-start-btn" class="mm-btn-gold" onclick="startGame()" disabled>
+        ▶ &nbsp;Iniciar Juego
+      </button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════ JOIN SCREEN ═══════════════════════════ -->
+  <div id="screen-join" class="mp-screen">
+    <div class="mm-stars" aria-hidden="true"></div>
+    <div class="mm-card">
+      <div class="mm-card-title">🔑 Unirse a Sala</div>
+      <label class="mm-label">Código de sala</label>
+      <input id="join-code-input" class="mm-input mm-input-code" type="text" maxlength="6"
+             placeholder="XXXXXX" autocomplete="off" oninput="this.value=this.value.toUpperCase()">
+      <label class="mm-label">Tu apodo</label>
+      <input id="join-name-input" class="mm-input" type="text" maxlength="20"
+             placeholder="Ej: Ana Torres" autocomplete="off">
+      <button class="mm-btn-gold" onclick="joinRoom()">✔ &nbsp;Unirse</button>
+      <button class="mm-btn-back" onclick="goTo('screen-home')">← Volver</button>
+      <div id="join-error" class="mm-error" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════ PLAYER LOBBY ═══════════════════════════ -->
+  <div id="screen-player-lobby" class="mp-screen">
+    <div class="mm-stars" aria-hidden="true"></div>
+    <div class="mm-player-lobby">
+      <div class="mm-player-lobby-code">Sala&nbsp;<span id="player-room-code-display">——</span></div>
+      <div class="mm-player-lobby-name">Conectado como&nbsp;<strong id="player-name-display">—</strong></div>
+      <div class="mm-players-box" style="max-width:460px;">
+        <div class="mm-players-title">
+          Jugadores en sala
+          <span id="player-count-badge" class="mm-count-badge">0</span>
         </div>
-        <div class="fb-section-label">Respuesta correcta</div>
-        <div class="fb-answer" id="fb-answer"></div>
-        <div class="fb-section-label" style="margin-top:10px;">Justificación</div>
-        <div class="fb-just" id="fb-just"></div>
+        <div id="player-lobby-list" class="mm-player-list"></div>
       </div>
-      <button class="btn-gold" id="next-btn" onclick="nextQ()">Siguiente pregunta →</button>
-    </div>
-
-    <!-- RESULT -->
-    <div id="result-screen" style="display:none;">
-      <div class="result-circle" id="res-circle">🏆</div>
-      <div class="result-score" id="res-score">0/0</div>
-      <div class="result-pct"   id="res-pct">0%</div>
-      <div class="result-msg"   id="res-msg"></div>
-      <div class="result-summary">
-        <div class="rs-stat"><div class="rs-n green" id="rs-ok">0</div><div class="rs-l">Correctas</div></div>
-        <div class="rs-stat"><div class="rs-n red"   id="rs-bad">0</div><div class="rs-l">Incorrectas</div></div>
-        <div class="rs-stat"><div class="rs-n" style="color:var(--gold)" id="rs-total">0</div><div class="rs-l">Total</div></div>
+      <div class="mm-waiting-dots">
+        <div class="mm-dot"></div><div class="mm-dot"></div><div class="mm-dot"></div>
       </div>
-      <button class="btn-gold" onclick="startGame()">🔄 Jugar de nuevo</button>
-      <button class="btn-outline" onclick="showMenu()">Volver al menú</button>
+      <div class="mm-waiting-msg">Esperando al anfitrión para iniciar…</div>
     </div>
   </div>
 
-  <!-- EDIT TAB -->
-  <div id="edit-tab" class="screen">
-    <div class="editor-header">
-      <span class="editor-count" id="editor-count">Preguntas: 0</span>
-      <button class="btn-outline" style="width:auto;padding:8px 18px;font-size:12px;margin-top:0;" onclick="addQ()">+ Agregar</button>
+  <!-- ════════════════════════ QUESTION ══════════════════════════════ -->
+  <div id="screen-question" class="mp-screen">
+    <div class="mm-stars" aria-hidden="true"></div>
+
+    <!-- Header: counter + diff + timer -->
+    <div class="mm-q-topbar">
+      <div class="mm-q-meta">
+        <span class="mm-q-counter" id="q-counter">1 / 10</span>
+        <span class="mm-diff-badge diff-easy" id="q-difficulty">Fácil</span>
+      </div>
+      <div class="mm-timer-block">
+        <svg class="mm-timer-ring" viewBox="0 0 60 60">
+          <circle class="mm-timer-bg" cx="30" cy="30" r="26"/>
+          <circle class="mm-timer-arc" id="timer-arc" cx="30" cy="30" r="26"
+                  stroke-dasharray="163.4" stroke-dashoffset="0"/>
+        </svg>
+        <div class="mm-timer-num" id="timer-num">20</div>
+      </div>
     </div>
-    <div class="editor-list" id="editor-list"></div>
-    <button class="btn-gold" onclick="saveAndPlay()">💾 Guardar y jugar</button>
+
+    <!-- Score ticker (player's current score) -->
+    <div class="mm-score-ticker" id="score-ticker" style="display:none;">
+      <span class="mm-score-label">Tu puntuación</span>
+      <span class="mm-score-val" id="my-score-val">0</span>
+    </div>
+
+    <!-- Question text -->
+    <div class="mm-q-box">
+      <div class="mm-q-text" id="q-text">…</div>
+    </div>
+
+    <!-- Options grid: 2×2 Millonario style -->
+    <div class="mm-opts-grid" id="opts-grid"></div>
+
+    <!-- Host: progress bar -->
+    <div id="host-progress-bar" class="mm-host-progress" style="display:none;">
+      <span id="host-progress-text">0 / 0 respondieron</span>
+      <button class="mm-btn-skip" onclick="skipReveal()">⏭ Saltar</button>
+    </div>
+    <!-- Player: waiting after answer -->
+    <div id="player-answered-msg" class="mm-answered-msg" style="display:none;">
+      ⏳ Esperando a los demás jugadores…
+    </div>
   </div>
-</div>
+
+  <!-- ═══════════════════════ REVEAL + LB ════════════════════════════ -->
+  <div id="screen-reveal" class="mp-screen">
+    <div class="mm-stars" aria-hidden="true"></div>
+
+    <!-- Player result -->
+    <div id="reveal-result" class="mm-reveal-result">
+      <div id="reveal-icon" class="mm-reveal-icon">✓</div>
+      <div id="reveal-verdict" class="mm-reveal-verdict">¡Correcto!</div>
+      <div id="reveal-points" class="mm-reveal-points">+1500 pts</div>
+    </div>
+
+    <!-- Correct answer box -->
+    <div class="mm-correct-box">
+      <div class="mm-correct-label">✅ Respuesta correcta</div>
+      <div id="reveal-correct-text" class="mm-correct-text">—</div>
+      <div class="mm-just-label">Justificación</div>
+      <div id="reveal-justification" class="mm-just-text">—</div>
+    </div>
+
+    <!-- Leaderboard -->
+    <div class="mm-lb-section">
+      <div class="mm-lb-title">📊 Clasificación</div>
+      <div id="reveal-leaderboard" class="mm-leaderboard"></div>
+    </div>
+
+    <!-- Auto-advance countdown -->
+    <div class="mm-auto-bar-wrap" id="auto-bar-wrap">
+      <div class="mm-auto-bar-track">
+        <div class="mm-auto-bar" id="auto-bar"></div>
+      </div>
+      <span id="auto-bar-label" class="mm-auto-label">Próxima pregunta en 8s…</span>
+    </div>
+
+    <!-- Host skip -->
+    <button id="reveal-skip-btn" class="mm-btn-skip-big" onclick="skipReveal()" style="display:none;">
+      ⏭ &nbsp;Siguiente ahora
+    </button>
+  </div>
+
+  <!-- ═══════════════════════ FINAL PODIUM ════════════════════════════ -->
+  <div id="screen-final" class="mp-screen">
+    <div class="mm-stars" aria-hidden="true"></div>
+    <div class="mm-final-header">
+      <div class="mm-final-trophy">🏆</div>
+      <div class="mm-final-title">¡Fin del Juego!</div>
+    </div>
+    <div id="final-podium" class="mm-podium"></div>
+    <div class="mm-final-lb-title">Clasificación completa</div>
+    <div id="final-leaderboard" class="mm-leaderboard mm-final-lb"></div>
+    <button class="mm-btn-gold mm-final-play-again" onclick="location.reload()">🔄 &nbsp;Jugar de nuevo</button>
+    <div id="final-confetti" class="mm-confetti-wrap"></div>
+  </div>
+
+</div><!-- #app -->
+
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script src="config.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
