@@ -127,7 +127,8 @@ function showQuestion(roomCode) {
     text: q.text,
     options: shuffledOptions,
     difficulty: q.difficulty,
-    timeLimit: room.timerPerQuestion
+    timeLimit: room.timerPerQuestion,
+    correctIndex: room.currentShuffledCorrect
   });
 
   room.timer = setTimeout(() => endQuestion(roomCode), room.timerPerQuestion * 1000);

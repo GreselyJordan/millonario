@@ -757,6 +757,74 @@ body {
   50%      { transform: scale(1.03); }
 }
 
+/* ── LIFELINES (COMODINES) ───────────────────────────────────── */
+.mm-lifelines {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 16px 0 20px;
+  flex-wrap: wrap;
+}
+
+.mm-lifeline-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #1a2e99 0%, #0d1e70 100%);
+  border: 2px solid #FFD700;
+  border-radius: 8px;
+  color: #FFD700;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 90px;
+}
+
+.mm-lifeline-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2a3eaa 0%, #1a2e80 100%);
+  box-shadow: 0 0 15px rgba(255,215,0,0.5), inset 0 0 10px rgba(255,215,0,0.2);
+  transform: translateY(-2px);
+}
+
+.mm-lifeline-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  border-color: rgba(255,215,0,0.3);
+  color: rgba(255,215,0,0.3);
+}
+
+.mm-lifeline-btn:disabled:hover {
+  box-shadow: none;
+  transform: none;
+}
+
+.mm-lifeline-icon {
+  font-size: 20px;
+  font-weight: bold;
+  display: block;
+}
+
+.mm-lifeline-label {
+  font-size: 11px;
+  display: block;
+}
+
+.mm-opt-btn.mm-lifeline-hint {
+  animation: lifelineGlow 0.5s ease-in-out;
+}
+
+@keyframes lifelineGlow {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
 /* ── HOST PROGRESS ───────────────────────────────────────────── */
 .mm-host-progress {
   width: 100%;

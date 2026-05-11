@@ -6,6 +6,7 @@
 <title>¿Quién Quiere Ser Millonario? — Multijugador</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="multiplayer.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23FFD700' width='100' height='100'/><text x='50' y='70' font-size='60' font-weight='bold' text-anchor='middle' fill='%231a237e' font-family='serif'>$</text></svg>">
 </head>
 <body>
 
@@ -159,6 +160,22 @@
     <!-- Question text -->
     <div class="mm-q-box">
       <div class="mm-q-text" id="q-text">…</div>
+    </div>
+
+    <!-- Comodines (Lifelines) -->
+    <div class="mm-lifelines" id="lifelines-container">
+      <button class="mm-lifeline-btn" id="btn-50-50" onclick="useLifeline('5050')" title="Elimina 2 respuestas incorrectas">
+        <span class="mm-lifeline-icon">50/50</span>
+        <span class="mm-lifeline-label">50/50</span>
+      </button>
+      <button class="mm-lifeline-btn" id="btn-call" onclick="useLifeline('call')" title="Te muestra la respuesta correcta">
+        <span class="mm-lifeline-icon">📞</span>
+        <span class="mm-lifeline-label">Llamada</span>
+      </button>
+      <button class="mm-lifeline-btn" id="btn-ask" onclick="useLifeline('ask')" title="Consulta al público">
+        <span class="mm-lifeline-icon">👥</span>
+        <span class="mm-lifeline-label">Público</span>
+      </button>
     </div>
 
     <!-- Options grid: 2×2 Millonario style -->

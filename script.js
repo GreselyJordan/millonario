@@ -14,6 +14,9 @@ let hasAnswered = false;
 let currentShuffledOptions = [];
 let autoAdvanceInterval = null;
 let autoAdvanceSeconds = 8;
+let correctAnswerIndex = -1;
+let usedLifelines = { '5050': false, 'call': false, 'ask': false };
+let eliminatedOptions = new Set();
 
 const LETTERS = ['A', 'B', 'C', 'D'];
 const DIFF_LABEL = { easy: 'Fácil', medium: 'Media', hard: 'Difícil' };
@@ -42,6 +45,9 @@ const playWrong     = () => playTones([[440,0,.25],[330,.15,.25],[220,.3,.45]], 
 const playCountdown = () => playTones([[1100,0,.1],[1100,.25,.1],[1100,.5,.1]], 'sine', 0.18);
 const playFanfare   = () => playTones([[523,0,.2],[659,.2,.2],[784,.4,.2],[1047,.6,.4],[784,1,.15],[1047,1.15,.6]]);
 const playTick      = () => playTones([[900,0,.06]], 'square', 0.06);
+const play5050      = () => playTones([[784,0,.2],[659,.2,.2],[523,.4,.3]], 'sine', 0.3);
+const playCall      = () => playTones([[440,0,.15],[440,.2,.15],[880,.4,.2]], 'sine', 0.4);
+const playAsk       = () => playTones([[659,0,.1],[784,.15,.1],[659,.3,.1],[784,.45,.15]], 'sine', 0.3);
 
 // ── NAVEGACIÓN ────────────────────────────────────────────────────────────────
 function goTo(id) {
@@ -93,6 +99,59 @@ function submitAnswer(answerIndex, btn) {
   document.querySelectorAll('.mm-opt-btn').forEach(b => b.disabled = true);
   socket.emit('submit-answer', { answerIndex });
   document.getElementById('player-answered-msg').style.display = 'flex';
+}
+
+function useLifeline(type) {
+  if (isHost || hasAnswered || usedLifelines[type]) return;
+
+  const btn = document.getElementById(`btn-${type.replace('5050', '50-50')}`);
+  if (!btn || btn.disabled) return;
+
+  usedLifelines[type] = true;
+  btn.disabled = true;
+
+  if (type === '5050') {
+    use5050();
+  } else if (type === 'call') {
+    useCall();
+  } else if (type === 'ask') {
+    useAsk();
+  }
+}
+
+function use5050() {
+  play5050();
+  const incorrectIndices = [];
+  for (let i = 0; i < 4; i++) {
+    if (i !== correctAnswerIndex) {
+      incorrectIndices.push(i);
+    }
+  }
+
+  const toEliminate = incorrectIndices.slice(0, 2);
+  toEliminate.forEach(idx => {
+    eliminatedOptions.add(idx);
+    const btn = document.querySelector(`.mm-opt-${['a','b','c','d'][idx]}`);
+    if (btn) btn.style.opacity = '0.3';
+  });
+}
+
+function useCall() {
+  playCall();
+  const correctBtn = document.querySelector(`.mm-opt-${['a','b','c','d'][correctAnswerIndex]}`);
+  if (correctBtn) {
+    correctBtn.style.boxShadow = '0 0 20px rgba(0, 200, 83, 0.8), inset 0 0 10px rgba(0, 200, 83, 0.3)';
+    correctBtn.classList.add('mm-lifeline-hint');
+  }
+}
+
+function useAsk() {
+  playAsk();
+  const correctBtn = document.querySelector(`.mm-opt-${['a','b','c','d'][correctAnswerIndex]}`);
+  if (correctBtn) {
+    correctBtn.style.boxShadow = '0 0 20px rgba(100, 200, 255, 0.8), inset 0 0 10px rgba(100, 200, 255, 0.3)';
+    correctBtn.classList.add('mm-lifeline-hint');
+  }
 }
 
 // ── UI HELPERS ────────────────────────────────────────────────────────────────
@@ -261,9 +320,12 @@ socket.on('game-started', () => {
   goTo('screen-question');
 });
 
-socket.on('show-question', ({ questionNum, totalQuestions, text, options, difficulty, timeLimit }) => {
+socket.on('show-question', ({ questionNum, totalQuestions, text, options, difficulty, timeLimit, correctIndex }) => {
   hasAnswered = false;
   currentShuffledOptions = options;
+  correctAnswerIndex = correctIndex || 0;
+  eliminatedOptions.clear();
+  usedLifelines = { '5050': false, 'call': false, 'ask': false };
 
   // Update header
   document.getElementById('q-counter').textContent = `${questionNum} / ${totalQuestions}`;
@@ -282,6 +344,17 @@ socket.on('show-question', ({ questionNum, totalQuestions, text, options, diffic
     scoreVal.textContent = myScore.toLocaleString();
   }
 
+  // Reset lifeline buttons
+  if (!isHost) {
+    ['50-50', 'call', 'ask'].forEach(name => {
+      const btn = document.getElementById(`btn-${name}`);
+      if (btn) {
+        btn.disabled = false;
+        btn.style.opacity = '1';
+      }
+    });
+  }
+
   // Build options (Millonario style: A top-left, B top-right, C bottom-left, D bottom-right)
   const grid = document.getElementById('opts-grid');
   grid.innerHTML = '';
@@ -294,6 +367,8 @@ socket.on('show-question', ({ questionNum, totalQuestions, text, options, diffic
       btn.classList.add('mm-host-view');
     } else {
       btn.onclick = () => submitAnswer(i, btn);
+      btn.style.opacity = '1';
+      btn.style.boxShadow = 'none';
     }
     grid.appendChild(btn);
   });
@@ -305,6 +380,12 @@ socket.on('show-question', ({ questionNum, totalQuestions, text, options, diffic
   const pb = document.getElementById('host-progress-bar');
   pb.style.display = isHost ? 'flex' : 'none';
   if (isHost) document.getElementById('host-progress-text').textContent = '0 / ? respondieron';
+
+  // Hide lifelines for host
+  const lifelinesContainer = document.getElementById('lifelines-container');
+  if (lifelinesContainer) {
+    lifelinesContainer.style.display = isHost ? 'none' : 'flex';
+  }
 
   startTimer(timeLimit);
   stopAutoBar();
