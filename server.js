@@ -226,7 +226,8 @@ io.on('connection', (socket) => {
     if (taken) return socket.emit('join-error', 'Ese nombre ya está en uso. Elige otro.');
 
     room.players.set(socket.id, {
-      id: socket.id, name, score: 0, answered: false, lastPoints: 0, lastCorrect: false
+      id: socket.id, name, score: 0, answered: false, lastPoints: 0, lastCorrect: false,
+      usedLifelines: { '5050': false, 'call': false, 'ask': false }
     });
 
     socket.join(upperCode);

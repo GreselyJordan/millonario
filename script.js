@@ -15,7 +15,7 @@ let currentShuffledOptions = [];
 let autoAdvanceInterval = null;
 let autoAdvanceSeconds = 8;
 let correctAnswerIndex = -1;
-let usedLifelines = { '5050': false, 'call': false, 'ask': false };
+let globalUsedLifelines = { '5050': false, 'call': false, 'ask': false };
 let eliminatedOptions = new Set();
 
 const LETTERS = ['A', 'B', 'C', 'D'];
@@ -102,12 +102,12 @@ function submitAnswer(answerIndex, btn) {
 }
 
 function useLifeline(type) {
-  if (isHost || hasAnswered || usedLifelines[type]) return;
+  if (isHost || hasAnswered || globalUsedLifelines[type]) return;
 
   const btn = document.getElementById(`btn-${type.replace('5050', '50-50')}`);
   if (!btn || btn.disabled) return;
 
-  usedLifelines[type] = true;
+  globalUsedLifelines[type] = true;
   btn.disabled = true;
 
   if (type === '5050') {
@@ -317,6 +317,7 @@ socket.on('start-error', (msg) => alert(msg));
 
 socket.on('game-started', () => {
   myScore = 0;
+  globalUsedLifelines = { '5050': false, 'call': false, 'ask': false };
   goTo('screen-question');
 });
 
@@ -325,7 +326,6 @@ socket.on('show-question', ({ questionNum, totalQuestions, text, options, diffic
   currentShuffledOptions = options;
   correctAnswerIndex = correctIndex || 0;
   eliminatedOptions.clear();
-  usedLifelines = { '5050': false, 'call': false, 'ask': false };
 
   // Update header
   document.getElementById('q-counter').textContent = `${questionNum} / ${totalQuestions}`;
@@ -344,13 +344,14 @@ socket.on('show-question', ({ questionNum, totalQuestions, text, options, diffic
     scoreVal.textContent = myScore.toLocaleString();
   }
 
-  // Reset lifeline buttons
+  // Update lifeline buttons based on global usage
   if (!isHost) {
     ['50-50', 'call', 'ask'].forEach(name => {
+      const type = name === '50-50' ? '5050' : name;
       const btn = document.getElementById(`btn-${name}`);
       if (btn) {
-        btn.disabled = false;
-        btn.style.opacity = '1';
+        btn.disabled = globalUsedLifelines[type];
+        btn.style.opacity = globalUsedLifelines[type] ? '0.3' : '1';
       }
     });
   }
