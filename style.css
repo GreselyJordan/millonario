@@ -81,12 +81,12 @@ body::before {
 .diff-easy   { background: rgba(0,180,60,0.18); color: #00e676; border: 1px solid rgba(0,180,60,0.3); }
 .diff-medium { background: rgba(255,165,0,0.18); color: #FFB300; border: 1px solid rgba(255,165,0,0.3); }
 .diff-hard   { background: rgba(220,0,0,0.18); color: #ff6b6b; border: 1px solid rgba(220,0,0,0.3); }
-.q-text { font-size: clamp(14px,2.2vw,17px); line-height: 1.6; color: #fff; }
+.q-text { font-size: clamp(18px,3vw,22px); line-height: 1.6; color: #fff; }
 
 /* OPTIONS */
 .opts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
 @media (max-width: 500px) { .opts-grid { grid-template-columns: 1fr; } }
-.opt-btn { background: var(--blue-opt); border: 1px solid rgba(80,130,255,0.25); border-radius: 12px; padding: 13px 16px; cursor: pointer; text-align: left; color: #fff; font-family: var(--font-body); font-size: clamp(12px,1.8vw,14px); line-height: 1.45; transition: all 0.2s; display: flex; align-items: flex-start; gap: 10px; }
+.opt-btn { background: var(--blue-opt); border: 1px solid rgba(80,130,255,0.25); border-radius: 12px; padding: 13px 16px; cursor: pointer; text-align: left; color: #fff; font-family: var(--font-body); font-size: clamp(18px,3vw,22px); line-height: 1.45; transition: all 0.2s; display: flex; align-items: flex-start; gap: 10px; }
 .opt-btn:hover:not(:disabled) { background: var(--blue-opt-h); border-color: rgba(100,180,255,0.5); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,60,200,0.3); }
 .opt-letter { background: rgba(255,215,0,0.12); border: 1px solid rgba(255,215,0,0.35); border-radius: 50%; width: 26px; height: 26px; min-width: 26px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--gold); margin-top: 1px; }
 .opt-btn.correct { background: rgba(0,150,60,0.3); border-color: var(--correct); animation: pop 0.4s ease; }
@@ -99,7 +99,6 @@ body::before {
 @keyframes strikeOut { 0%{opacity:1;} 50%{opacity:0.5;transform:scale(0.95);} 100%{opacity:0.15;} }
 .opt-btn.hiding { animation: strikeOut 0.5s ease forwards; }
 
-/* FEEDBACK */
 .feedback { border-radius: 14px; padding: 16px 18px; margin-bottom: 14px; display: none; animation: fadeUp 0.35s ease; }
 .feedback.show { display: block; }
 .feedback.ok  { background: rgba(0,120,50,0.22); border: 1px solid rgba(0,200,80,0.35); }
