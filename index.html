@@ -10,6 +10,8 @@
 </head>
 <body>
 
+<button id="mute-btn" onclick="BgMusic.toggleMute()" title="Silenciar / Activar música" aria-label="Silenciar música">🔊</button>
+
 <div id="app">
 
   <!-- ═══════════════════════════ HOME ═══════════════════════════════ -->
@@ -25,10 +27,10 @@
       </div>
     </div>
     <div class="mp-home-btns">
-      <button class="mm-btn-gold" onclick="goTo('screen-host-setup')">
+      <button class="mm-btn-gold" onclick="BgMusic.playLobby(); goTo('screen-host-setup')">
         🎯 &nbsp;Crear Sala
       </button>
-      <button class="mm-btn-outline" onclick="goTo('screen-join')">
+      <button class="mm-btn-outline" onclick="BgMusic.playLobby(); goTo('screen-join')">
         🔑 &nbsp;Unirse a Sala
       </button>
     </div>
